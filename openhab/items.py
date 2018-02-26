@@ -89,8 +89,15 @@ class Item(object):
       if not isinstance(value, six.string_types):
         raise ValueError()
     elif 'types' in dir(self):
+      valid = False
       for type_ in self.types:
-        type_.validate(value)
+        try:
+          type_.validate(value)
+          valid = True
+        except:
+          pass
+      if not valid:
+        raise ValueError()
     else:
       raise ValueError()
 
