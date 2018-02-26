@@ -46,6 +46,8 @@ class Item(object):
     self.type_ = None
     self.name = ''
     self._state = None
+    self.tags = []
+    self.label = None
     self.init_from_json(json_data)
 
   def init_from_json(self, json_data):
@@ -59,6 +61,10 @@ class Item(object):
     self.name = json_data['name']
     self.type_ = json_data['type']
     self.__set_state(json_data['state'])
+    if 'tags' in json_data:
+      self.tags = json_data['tags']
+    if 'label' in json_data:
+      self.label = json_data['label']
 
   @property
   def state(self):
