@@ -23,7 +23,11 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import six
 import dateutil.parser
-from openhab.types import DateTimeType, OnOffType, DecimalType, OpenCloseType
+from openhab.types import (
+  DateTimeType, OnOffType, DecimalType,
+  OpenCloseType, IncreaseDecreaseType,
+  PercentType, HSBType
+)
 
 __author__ = 'Georges Toth <georges@trypill.org>'
 __license__ = 'AGPLv3+'
@@ -180,6 +184,24 @@ class SwitchItem(Item):
   def off(self):
     """Set the state of the switch to OFF"""
     self.command('OFF')
+
+
+class DimmerItem(SwitchItem):
+  """Dimmer item type"""
+  types = [OnOffType, IncreaseDecreaseType, PercentType]
+
+  def increase(self):
+    """Set the state of the color item to ON"""
+    self.command('INCREASE')
+
+  def decrease(self):
+    """Set the state of the color item to OFF"""
+    self.command('DECREASE')
+
+
+class ColorItem(DimmerItem):
+  """Color item type"""
+  types = [OnOffType, IncreaseDecreaseType, PercentType, HSBType]
 
 
 class NumberItem(Item):
