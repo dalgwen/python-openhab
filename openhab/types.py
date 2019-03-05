@@ -29,12 +29,12 @@ __license__ = 'AGPLv3+'
 
 
 class CommandType(metaclass=abc.ABCMeta):
-  """Base command type class"""
+    """Base command type class"""
 
-  @classmethod
-  @abc.abstractmethod
-  def validate(cls, value: typing.Any):
-    """Value validation method. As this is the base class which should not be used
+    @classmethod
+    @abc.abstractmethod
+    def validate(cls, value: typing.Any):
+        """Value validation method. As this is the base class which should not be used
     directly, we throw a NotImplementedError exception.
 
     Args:
@@ -45,14 +45,15 @@ class CommandType(metaclass=abc.ABCMeta):
       NotImplementedError: Raises NotImplementedError as the base class should never
                            be used directly.
     """
-    raise NotImplementedError()
+        raise NotImplementedError()
 
 
 class StringType(CommandType):
-  """StringType type class"""
-  @classmethod
-  def validate(cls, value: str):
-    """Value validation method.
+    """StringType type class"""
+
+    @classmethod
+    def validate(cls, value: str):
+        """Value validation method.
     Valid values are andy of type string.
 
     Args:
@@ -61,15 +62,16 @@ class StringType(CommandType):
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    if not isinstance(value, str):
-      raise ValueError()
+        if not isinstance(value, str):
+            raise ValueError()
 
 
 class OnOffType(StringType):
-  """OnOffType type class"""
-  @classmethod
-  def validate(cls, value: str):
-    """Value validation method.
+    """OnOffType type class"""
+
+    @classmethod
+    def validate(cls, value: str):
+        """Value validation method.
     Valid values are ``ON`` and ``OFF``.
 
     Args:
@@ -78,17 +80,18 @@ class OnOffType(StringType):
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    super().validate(value)
+        super().validate(value)
 
-    if value not in ['ON', 'OFF']:
-      raise ValueError()
+        if value not in ['ON', 'OFF']:
+            raise ValueError()
 
 
 class OpenCloseType(StringType):
-  """OpenCloseType type class"""
-  @classmethod
-  def validate(cls, value: str):
-    """Value validation method.
+    """OpenCloseType type class"""
+
+    @classmethod
+    def validate(cls, value: str):
+        """Value validation method.
     Valid values are ``OPEN`` and ``CLOSED``.
 
     Args:
@@ -97,17 +100,18 @@ class OpenCloseType(StringType):
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    super().validate(value)
+        super().validate(value)
 
-    if value not in ['OPEN', 'CLOSED']:
-      raise ValueError()
+        if value not in ['OPEN', 'CLOSED']:
+            raise ValueError()
 
 
 class DecimalType(CommandType):
-  """DecimalType type class"""
-  @classmethod
-  def validate(cls, value: typing.Union[float, int]):
-    """Value validation method.
+    """DecimalType type class"""
+
+    @classmethod
+    def validate(cls, value: typing.Union[float, int]):
+        """Value validation method.
     Valid values are any of type ``float`` or ``int``.
 
     Args:
@@ -116,15 +120,16 @@ class DecimalType(CommandType):
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    if not isinstance(value, (int, float)):
-      raise ValueError()
+        if not isinstance(value, (int, float)):
+            raise ValueError()
 
 
 class PercentType(DecimalType):
-  """PercentType type class"""
-  @classmethod
-  def validate(cls, value: typing.Union[float, int]):
-    """Value validation method.
+    """PercentType type class"""
+
+    @classmethod
+    def validate(cls, value: typing.Union[float, int]):
+        """Value validation method.
     Valid values are any of type ``float`` or ``int`` and must be greater of equal to 0
     and smaller or equal to 100.
 
@@ -134,17 +139,18 @@ class PercentType(DecimalType):
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    super().validate(value)
+        super().validate(value)
 
-    if not (0 <= value <= 100):
-      raise ValueError()
+        if not (0 <= value <= 100):
+            raise ValueError()
 
 
 class IncreaseDecreaseType(StringType):
-  """IncreaseDecreaseType type class"""
-  @classmethod
-  def validate(cls, value: str):
-    """Value validation method.
+    """IncreaseDecreaseType type class"""
+
+    @classmethod
+    def validate(cls, value: str):
+        """Value validation method.
     Valid values are ``INCREASE`` and ``DECREASE``.
 
     Args:
@@ -153,17 +159,18 @@ class IncreaseDecreaseType(StringType):
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    super().validate(value)
+        super().validate(value)
 
-    if value not in ['INCREASE', 'DECREASE']:
-      raise ValueError()
+        if value not in ['INCREASE', 'DECREASE']:
+            raise ValueError()
 
 
 class DateTimeType(CommandType):
-  """DateTimeType type class"""
-  @classmethod
-  def validate(cls, value: datetime.datetime):
-    """Value validation method.
+    """DateTimeType type class"""
+
+    @classmethod
+    def validate(cls, value: datetime.datetime):
+        """Value validation method.
     Valid values are any of type ``datetime.datetime``.
 
     Args:
@@ -172,38 +179,39 @@ class DateTimeType(CommandType):
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    if not isinstance(value, datetime.datetime):
-      raise ValueError()
+        if not isinstance(value, datetime.datetime):
+            raise ValueError()
 
 
 class HSBType(StringType):
-  """HSBType type class"""
-  @classmethod
-  def validate(cls, value):
-    """Value validation method.
+    """HSBType type class"""
+
+    @classmethod
+    def validate(cls, value):
+        """Value validation method.
     Valid values are HSB value.
     Args:
       value (str): The value to validate.
     Raises:
       ValueError: Raises ValueError if an invalid value has been specified.
     """
-    super(HSBType, cls).validate(value)
-    
-    vals = value.split(',')
-    
-    if len(vals) == 3:
-      count = 0
-      for i in vals:
-        if i.isdigit():
-          if count == 0 and 0 <= int(i) <= 360:
-            count += 1
-          elif count == 1 and 0 <= int(i) <= 100:
-            count += 1
-          elif count == 2 and 0 <= int(i) <= 100:
-            pass
-          else:
-            raise ValueError()
+        super(HSBType, cls).validate(value)
+
+        vals = value.split(',')
+
+        if len(vals) == 3:
+            count = 0
+            for i in vals:
+                if i.isdigit():
+                    if count == 0 and 0 <= int(i) <= 360:
+                        count += 1
+                    elif count == 1 and 0 <= int(i) <= 100:
+                        count += 1
+                    elif count == 2 and 0 <= int(i) <= 100:
+                        pass
+                    else:
+                        raise ValueError()
+                else:
+                    raise ValueError()
         else:
-          raise ValueError()
-    else:
-      raise ValueError()
+            raise ValueError()

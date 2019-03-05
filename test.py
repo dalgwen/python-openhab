@@ -35,9 +35,9 @@ knx_day_night = items.get('KNX_day_night')
 
 now = datetime.datetime.now(datetime.timezone.utc)
 
-if now > sunrise.state and now < sunset.state:
-  knx_day_night.on()
+if sunrise.state < now < sunset.state:
+    knx_day_night.on()
 else:
-  knx_day_night.off()
+    knx_day_night.off()
 
 print(knx_day_night.state)

@@ -28,21 +28,20 @@ import requests
 from requests.auth import HTTPBasicAuth
 import openhab.items
 
-
 __author__ = 'Georges Toth <georges@trypill.org>'
 __license__ = 'AGPLv3+'
 
 
 class OpenHAB:
-  """openHAB REST API client
+    """openHAB REST API client
   """
 
-  def __init__(self, base_url: str,
-               username: typing.Optional[str] = None,
-               password: typing.Optional[str] = None,
-               http_auth: typing.Optional[requests.auth.AuthBase] = None,
-               timeout: typing.Optional[float] = None) -> None:
-    """
+    def __init__(self, base_url: str,
+                 username: typing.Optional[str] = None,
+                 password: typing.Optional[str] = None,
+                 http_auth: typing.Optional[requests.auth.AuthBase] = None,
+                 timeout: typing.Optional[float] = None) -> None:
+        """
     Args:
       base_url (str): The openHAB REST URL, e.g. http://example.com/rest
       username (str, optional): A optional username, used in conjunction with a optional
@@ -56,21 +55,21 @@ class OpenHAB:
     Returns:
       OpenHAB: openHAB class instance.
     """
-    self.base_url = base_url
+        self.base_url = base_url
 
-    self.session = requests.Session()
-    self.session.headers['accept'] = 'application/json'
+        self.session = requests.Session()
+        self.session.headers['accept'] = 'application/json'
 
-    if http_auth is not None:
-      self.session.auth = http_auth
-    elif not (username is None or password is None):
-      self.session.auth = HTTPBasicAuth(username, password)
+        if http_auth is not None:
+            self.session.auth = http_auth
+        elif not (username is None or password is None):
+            self.session.auth = HTTPBasicAuth(username, password)
 
-    self.timeout = timeout
+        self.timeout = timeout
 
-  @staticmethod
-  def _check_req_return(req: requests.Response) -> None:
-    """Internal method for checking the return value of a REST HTTP request.
+    @staticmethod
+    def _check_req_return(req: requests.Response) -> None:
+        """Internal method for checking the return value of a REST HTTP request.
 
     Args:
       req (requests.Response): A requests Response object.
@@ -82,13 +81,13 @@ class OpenHAB:
       ValueError: Raises a ValueError exception in case of a non-successful
                   REST request.
     """
-    if not (200 <= req.status_code < 300):
-      req.raise_for_status()
+        if not (200 <= req.status_code < 300):
+            req.raise_for_status()
 
-    return None
+        return None
 
-  def req_get(self, uri_path: str) -> typing.Any:
-    """Helper method for initiating a HTTP GET request. Besides doing the actual
+    def req_get(self, uri_path: str) -> typing.Any:
+        """Helper method for initiating a HTTP GET request. Besides doing the actual
     request, it also checks the return value and returns the resulting decoded
     JSON data.
 
@@ -98,12 +97,12 @@ class OpenHAB:
     Returns:
       dict: Returns a dict containing the data returned by the openHAB REST server.
     """
-    r = self.session.get(self.base_url + uri_path, timeout=self.timeout)
-    self._check_req_return(r)
-    return r.json()
+        r = self.session.get(self.base_url + uri_path, timeout=self.timeout)
+        self._check_req_return(r)
+        return r.json()
 
-  def req_post(self, uri_path: str, data: typing.Optional[dict] = None) -> None:
-    """Helper method for initiating a HTTP POST request. Besides doing the actual
+    def req_post(self, uri_path: str, data: typing.Optional[dict] = None) -> None:
+        """Helper method for initiating a HTTP POST request. Besides doing the actual
     request, it also checks the return value and returns the resulting decoded
     JSON data.
 
@@ -114,13 +113,13 @@ class OpenHAB:
     Returns:
       None: No data is returned.
     """
-    r = self.session.post(self.base_url + uri_path, data=data, timeout=self.timeout)
-    self._check_req_return(r)
+        r = self.session.post(self.base_url + uri_path, data=data, timeout=self.timeout)
+        self._check_req_return(r)
 
-    return None
+        return None
 
-  def req_put(self, uri_path: str, data: typing.Optional[dict] = None) -> None:
-    """Helper method for initiating a HTTP PUT request. Besides doing the actual
+    def req_put(self, uri_path: str, data: typing.Optional[dict] = None) -> None:
+        """Helper method for initiating a HTTP PUT request. Besides doing the actual
     request, it also checks the return value and returns the resulting decoded
     JSON data.
 
@@ -131,33 +130,33 @@ class OpenHAB:
     Returns:
       None: No data is returned.
     """
-    r = self.session.put(self.base_url + uri_path, data=data, timeout=self.timeout)
-    self._check_req_return(r)
+        r = self.session.put(self.base_url + uri_path, data=data, timeout=self.timeout)
+        self._check_req_return(r)
 
-    return None
+        return None
 
-  # fetch all items
-  def fetch_all_items(self) -> dict:
-    """Returns all items defined in openHAB except for group-items
+    # fetch all items
+    def fetch_all_items(self) -> dict:
+        """Returns all items defined in openHAB except for group-items
 
     Returns:
       dict: Returns a dict with item names as key and item class instances as value.
     """
-    items = {}  # type: dict
-    res = self.req_get('/items/')
+        items = {}  # type: dict
+        res = self.req_get('/items/')
 
-    for i in res:
-      # we ignore group-items for now
-      if i['type'] == 'Group':
-        continue
+        for i in res:
+            # we ignore group-items for now
+            if i['type'] == 'Group':
+                continue
 
-      if not i['name'] in items:
-        items[i['name']] = self.json_to_item(i)
+            if not i['name'] in items:
+                items[i['name']] = self.json_to_item(i)
 
-    return items
+        return items
 
-  def get_item(self, name: str) -> openhab.items.Item:
-    """Returns an item with its state and type as fetched from openHAB
+    def get_item(self, name: str) -> openhab.items.Item:
+        """Returns an item with its state and type as fetched from openHAB
 
     Args:
       name (str): The name of the item to fetch from openHAB.
@@ -165,12 +164,12 @@ class OpenHAB:
     Returns:
       Item: A corresponding Item class instance with the state of the requested item.
     """
-    json_data = self.get_item_raw(name)
+        json_data = self.get_item_raw(name)
 
-    return self.json_to_item(json_data)
+        return self.json_to_item(json_data)
 
-  def json_to_item(self, json_data: dict) -> openhab.items.Item:
-    """This method takes as argument the RAW (JSON decoded) response for an openHAB
+    def json_to_item(self, json_data: dict) -> openhab.items.Item:
+        """This method takes as argument the RAW (JSON decoded) response for an openHAB
     item. It checks of what type the item is and returns a class instance of the
     specific item filled with the item's state.
 
@@ -180,29 +179,29 @@ class OpenHAB:
     Returns:
       Item: A corresponding Item class instance with the state of the item.
     """
-    if json_data['type'] == 'Switch':
-      return openhab.items.SwitchItem(self, json_data)
-    elif json_data['type'] == 'DateTime':
-      return openhab.items.DateTimeItem(self, json_data)
-    elif json_data['type'] == 'Contact':
-      return openhab.items.ContactItem(self, json_data)
-    elif json_data['type'].startswith('Number'):
-      if json_data['type'].startswith('Number:'):
-        m = re.match(r'''^([^\s]+)''', json_data['state'])
+        if json_data['type'] == 'Switch':
+            return openhab.items.SwitchItem(self, json_data)
+        elif json_data['type'] == 'DateTime':
+            return openhab.items.DateTimeItem(self, json_data)
+        elif json_data['type'] == 'Contact':
+            return openhab.items.ContactItem(self, json_data)
+        elif json_data['type'].startswith('Number'):
+            if json_data['type'].startswith('Number:'):
+                m = re.match(r'''^([^\s]+)''', json_data['state'])
 
-        if m:
-          json_data['state'] = m.group(1)
+                if m:
+                    json_data['state'] = m.group(1)
 
-      return openhab.items.NumberItem(self, json_data)
-    elif json_data['type'] == 'Dimmer':
-      return openhab.items.DimmerItem(self, json_data)
-    elif json_data['type'] == 'Color':
-      return openhab.items.ColorItem(self, json_data)
-    else:
-      return openhab.items.Item(self, json_data)
+            return openhab.items.NumberItem(self, json_data)
+        elif json_data['type'] == 'Dimmer':
+            return openhab.items.DimmerItem(self, json_data)
+        elif json_data['type'] == 'Color':
+            return openhab.items.ColorItem(self, json_data)
+        else:
+            return openhab.items.Item(self, json_data)
 
-  def get_item_raw(self, name: str) -> typing.Any:
-    """Private method for fetching a json configuration of an item.
+    def get_item_raw(self, name: str) -> typing.Any:
+        """Private method for fetching a json configuration of an item.
 
     Args:
       name (str): The item name to be fetched.
@@ -210,12 +209,12 @@ class OpenHAB:
     Returns:
       dict: A JSON decoded dict.
     """
-    return self.req_get('/items/{}'.format(name))
+        return self.req_get('/items/{}'.format(name))
 
 
 # noinspection PyPep8Naming
 class openHAB(OpenHAB):
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    warnings.warn('The use of the "openHAB" class is deprecated, please use "OpenHAB" instead.', DeprecationWarning)
+        warnings.warn('The use of the "openHAB" class is deprecated, please use "OpenHAB" instead.', DeprecationWarning)
