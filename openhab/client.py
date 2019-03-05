@@ -26,8 +26,8 @@ import re
 
 import requests
 from requests.auth import HTTPBasicAuth
-
 import openhab.items
+
 
 __author__ = 'Georges Toth <georges@trypill.org>'
 __license__ = 'AGPLv3+'
@@ -196,6 +196,8 @@ class OpenHAB:
       return openhab.items.NumberItem(self, json_data)
     elif json_data['type'] == 'Dimmer':
       return openhab.items.DimmerItem(self, json_data)
+    elif json_data['type'] == 'Color':
+      return openhab.items.ColorItem(self, json_data)
     else:
       return openhab.items.Item(self, json_data)
 

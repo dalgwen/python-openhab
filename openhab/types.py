@@ -174,3 +174,36 @@ class DateTimeType(CommandType):
     """
     if not isinstance(value, datetime.datetime):
       raise ValueError()
+
+
+class HSBType(StringType):
+  """HSBType type class"""
+  @classmethod
+  def validate(cls, value):
+    """Value validation method.
+    Valid values are HSB value.
+    Args:
+      value (str): The value to validate.
+    Raises:
+      ValueError: Raises ValueError if an invalid value has been specified.
+    """
+    super(HSBType, cls).validate(value)
+    
+    vals = value.split(',')
+    
+    if len(vals) == 3:
+      count = 0
+      for i in vals:
+        if i.isdigit():
+          if count == 0 and 0 <= int(i) <= 360:
+            count += 1
+          elif count == 1 and 0 <= int(i) <= 100:
+            count += 1
+          elif count == 2 and 0 <= int(i) <= 100:
+            pass
+          else:
+            raise ValueError()
+        else:
+          raise ValueError()
+    else:
+      raise ValueError()

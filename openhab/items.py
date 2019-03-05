@@ -46,6 +46,8 @@ class Item:
     self.type_ = None
     self.name = ''
     self._state = None  # type: typing.Optional[typing.Any]
+    self.tags = []
+    self.label = None
     self.init_from_json(json_data)
 
   def init_from_json(self, json_data: dict):
@@ -59,6 +61,10 @@ class Item:
     self.name = json_data['name']
     self.type_ = json_data['type']
     self.__set_state(json_data['state'])
+    if 'tags' in json_data:
+      self.tags = json_data['tags']
+    if 'label' in json_data:
+      self.label = json_data['label']
 
   @property
   def state(self) -> typing.Any:
@@ -197,7 +203,6 @@ class SwitchItem(Item):
     """Set the state of the switch to OFF"""
     self.command('OFF')
 
-
 class NumberItem(Item):
   """NumberItem item type"""
   types = [openhab.types.DecimalType]
@@ -282,3 +287,8 @@ class DimmerItem(Item):
   def decrease(self):
     """Decrease the state of the dimmer"""
     self.command('DECREASE')
+
+class ColorItem(DimmerItem):
+  """Color item type"""
+  types = [openhab.types.OnOffType, openhab.types.IncreaseDecreaseType, openhab.types.PercentType, openhab.types.HSBType]
+
