@@ -18,6 +18,8 @@
 python library for accessing the openHAB REST API
 =================================================
 
+(a merge of sim0nx/python-openhab, with commit from kabili207 to support Dimmer and Color item)
+
 This library allows for easily accessing the openHAB REST API.
 A number of features are implemented but not all, this is work in progress.
 
